@@ -1,5 +1,8 @@
 package com.py.service;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,11 @@ public class SysUserService {
 	}
 	
 	
+	public int delete(Integer id) {
+		return sysUserMapper.deleteByPrimaryKey(id);
+	}
+	
+	
 	public SysUser selectByPrimaryKey(Integer id) {
 		return sysUserMapper.selectByPrimaryKey(id);
 	}
@@ -36,6 +44,30 @@ public class SysUserService {
 	public SysUser selectByLoginName(String loginName) {
 		return sysUserMapper.selectByLoginName(loginName);
 	}
+	
+	/**
+     * 根据条件查询列表
+     * @param searchMap
+     * @return
+     */
+	public List<SysUser> selectConditionList(Map<String, Object> searchMap){
+		return sysUserMapper.selectConditionList(searchMap);
+	}
+	
+	/**
+     * 检测是否重复
+     * @param searchMap
+     * @return
+     */
+	public long checkRepeat(Map<String, Object> searchMap) {
+		return sysUserMapper.checkRepeat(searchMap);
+	}
+	
+	
+	
+	
+	
+	
 	
 	
 }

@@ -55,7 +55,7 @@
 			  shade: 0.8,
 			  maxmin: true,
 			  area: ['50%','50%'],
-			  content: '${ctx}/god/toUpdatePassWord',
+			  content: '${ctx}/sys_user/toUpdatePassWord',
 			  btn: ['立即提交'],
 			  yes: function(index, layero){ 
 				  var nodeName = window["layui-layer-iframe" + index];

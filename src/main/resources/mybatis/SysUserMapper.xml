@@ -183,5 +183,24 @@
     where login_name = #{loginName}
   </select>
   
+  <!-- 根据条件查询列表  -->
+  <select id="selectConditionList" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where 1=1
+    <if test="conditionName != null and conditionName != '' ">
+    	and name like concat('%',#{conditionName},'%')
+    </if>
+  </select>
+  
+  
+  <!-- 检测重复 -->
+  <select id="checkRepeat" parameterType="java.util.Map" resultType="java.lang.Long">
+  	select count(1) from sys_user where 1=1
+  	<if test="loginName != null and loginName != '' ">
+    	and login_name = #{loginName}
+    </if> 
+  </select>
   
 </mapper>
