@@ -18,9 +18,9 @@
 	<!-- 搜索 -->
 	<div class="search">
 		<form class="layui-form"> 
-		         姓名：
+		         名称：
 			<div class="layui-inline">
-				<input class="layui-input" name="conditionName" id="conditionName" autocomplete="off" placeholder="请输入姓名">
+				<input class="layui-input" name="conditionName" id="conditionName" autocomplete="off" placeholder="请输入名称">
 			</div>
 		  	<button class="layui-btn" type="button" onclick="conditionSearch();">搜索</button>
 		  	<button class="layui-btn" type="button" onclick="conditionReset();">重置</button>
@@ -30,7 +30,6 @@
 	<div class="layui-btn-container tbtn">
 	  <button class="layui-btn " onclick="refresh();">刷新列表</button>
 	  <button class="layui-btn" onclick="add();">新增</button>
-	  <button class="layui-btn layui-btn-warm" onclick="batch_reset_password();">批量重置密码</button>
 	  <button class="layui-btn layui-btn-danger" onclick="batch_delete();">批量删除</button>
 	</div>
 	<table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
@@ -39,14 +38,6 @@
       <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
       <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 	</script>
-	<!-- 时间转化模板  -->
-	<script id="timeConversion" type="text/html">  
-    	{{timestampToTime(d.lastLoginTime)}}   
-    </script>
-    <!-- 用户状态转化模板 -->
-    <script id="stateConversion" type="text/html" >
-  		<input type="checkbox" name="sex" value="{{d.id}}" lay-skin="switch" lay-text="启用|停用" lay-filter="stateFilter" {{ d.state == 1 ? '' : 'checked' }}>
-	</script>  
 	<!-- JS -->
 	<script src="${ctx }/static/lib/jquery-1.11.3.min.js"></script>
 	<script src="${ctx}/static/layui/layui.js" charset="utf-8"></script>
@@ -59,15 +50,13 @@
 	  //加载表格数据
 	  table.render({
 	    elem: '#tableId'
-	    ,url:'${ctx}/sys_user/toListData'
+	    ,url:'${ctx}/sys_role/toListData'
 	    ,cellMinWidth: 80
 	    ,page: true
 	    ,cols: [[
 	      {type:'checkbox'}
-	      ,{field:'loginName', title: '登录名'}
-	      ,{field:'name', title: '姓名'}
-	      ,{field:'lastLoginTime', title: '最后登录时间',templet:'#timeConversion'}
-	      ,{field:'state', title:'账户状态',width:90, templet: '#stateConversion'}
+	      ,{field:'name', title: '名称'}
+	      ,{field:'permissions', title: '标识'}
 	      ,{title:'操作',align:'center', toolbar: '#rbtn'}
 	    ]]
 	  });
@@ -76,53 +65,12 @@
 	  table.on('tool(tableFilter)', function(obj){
 	     var data = obj.data //获得当前行数据
 	    ,layEvent = obj.event; //获得 lay-event 对应的值
-	    if(layEvent === 'detail'){
-	      doDetails('用户详情',data.id)
-	    }
 	    if(layEvent === 'del'){
 	      doDelete('您确定要删除数据吗？删除后将无法恢复。',data.id);	
 	    }
 	    if(layEvent === 'edit'){
-	      doForm('修改用户',data.id);
+	      doForm('修改角色',data.id);
 	    }
-	  });
-	  
-	  //监听用户状态
-	  form.on('switch(stateFilter)', function(obj){
-	  	  //0启用 1禁用 
-	  	  var state;
-	  	  if(obj.elem.checked){
-	  		state = 0 
-	  	  }else{
-	  		state = 1 
-	  	  }
-	  	  var id = this.value;
-		  $.ajax({
-			url : '${ctx}/sys_user/updateState',		
-			type : "post",
-			async:false,
-			dataType:"json",
-			data: {id:id,state:state},
-			success : function(result) {
-				if(obj.elem.checked){
-					layer.msg('用户已启用', {
-		    			  icon: 6
-		    			  ,time: 1500
-		    		});	
-			  	}else{
-			  		layer.msg('用户已禁用', {
-		    			  icon: 6
-		    			  ,time: 1500
-		    		});	
-			  	}
-			},error : function(){
-				layer.msg('修改失败', {
-	    			  icon: 5
-	    			  ,time: 1500
-	    		});
-			} 
-		  });
-	  	  
 	  });
 	  
 	});
@@ -140,7 +88,7 @@
 	
 	//新增
 	function add(){
-		doForm('新增用户',0);
+		doForm('新增角色',0);
 	}
 	
 	//批量删除
@@ -159,21 +107,6 @@
 		  doBatchDelete('您确定要删除选择的数据吗？删除后将无法恢复。',array);
 	}
 	
-	//重置密码
-	function batch_reset_password(){
-		  var array = new Array();
-		  var checkStatus = table.checkStatus('tableId')
-	      ,data = checkStatus.data;
-		  if(data.length == 0){
-			  layer.msg('请选择');
-			  return;
-		  }
-		  for (var i = 0; i < data.length; i++) {
-				var obj = data[i];
-				array.push(obj.id);
-		  }
-		  doBatchResetPassWord('是否将选择的用户密码重置为：123456',array);
-	}
 	
 	
 	
@@ -199,7 +132,7 @@
 	function doDelete(title,id){
 		layer.confirm(title, function(index) {
 			$.ajax({
-			     url: '${ctx}/sys_user/delete',
+			     url: '${ctx}/sys_role/delete',
 			     type:"post",
 			     //async:false,
 			     dataType:"json",
@@ -208,7 +141,7 @@
 			    	layer.close(index);
 			    	layer.msg('删除成功', {
 	    			  icon: 6,
-	    			  time: 1500
+	    			  time: 1500 //1.5秒关闭（如果不配置，默认是3秒）
 	    			});
     				setTimeout(function(){
     					//重置页面
@@ -218,7 +151,7 @@
 			    	layer.close(index);
 	    		    layer.msg('删除失败', {
 	    			  icon: 6,
-	    			  time: 1500
+	    			  time: 1500 //1.5秒关闭（如果不配置，默认是3秒）
 	    			});
 			     }
 			});
@@ -229,16 +162,16 @@
 	function doBatchDelete(title,array){
 		layer.confirm(title, function(index) {
 			$.ajax({
-			     url: '${ctx}/sys_user/batchDelete',
+			     url: '${ctx}/sys_role/batchDelete',
 			     type:"post",
 			     //async:false,
 			     dataType:"json",
 			     data:{ids:array},
 			     success: function (result) {
 			    	layer.close(index);
-					layer.msg('删除成功', {
+			    	layer.msg('删除成功', {
 	    			  icon: 6,
-	    			  time: 1500 
+	    			  time: 1500 //1.5秒关闭（如果不配置，默认是3秒）
 	    			});
     				setTimeout(function(){
     					//重置页面
@@ -248,7 +181,7 @@
 			    	layer.close(index);
 	    		    layer.msg('删除失败', {
 	    			  icon: 6,
-	    			  time: 1500
+	    			  time: 1500 //1.5秒关闭（如果不配置，默认是3秒）
 	    			});
 			     }
 			});
@@ -265,7 +198,7 @@
 			  shade: 0.8,
 			  maxmin: true,
 			  area: ['80%','80%'],
-			  content: '${ctx}/sys_user/toForm?id='+id,
+			  content: '${ctx}/sys_role/toForm?id='+id,
 			  btn: ['立即提交'],
 			  yes: function(index, layero){ 
 				  var nodeName = window["layui-layer-iframe" + index];
@@ -273,34 +206,6 @@
 			  }
 		 });
 	}
-	
-	
-	//重置密码弹出框
-	function doBatchResetPassWord(title,array){
-		layer.confirm(title, function(index) {
-			$.ajax({
-			     url: '${ctx}/sys_user/batchResetPassword',
-			     type:"post",
-			     //async:false,
-			     dataType:"json",
-			     data:{ids:array},
-			     success: function (result) {
-			    	 layer.close(index);
-			    	 layer.msg('重置成功', {
-		    			  icon: 6,
-		    			  time: 1500 //1.5秒关闭（如果不配置，默认是3秒）
-		    		 });
-			     },error : function(){
-			    	layer.close(index);
-	    		    layer.msg('重置失败', {
-	    			  icon: 6,
-	    			  time: 1500 //1.5秒关闭（如果不配置，默认是3秒）
-	    			});
-			     }
-			});
-		});
-	}
-	
 	
 	//details弹出框
 	function doDetails(title,id){
@@ -310,9 +215,10 @@
 			  shade: 0.8,
 			  maxmin: true,
 			  area: ['80%','60%'],
-			  content: '${ctx}/sys_user/toDetails/'+id
+			  content: '${ctx}/sys_role/toDetails/'+id
 		 });
 	}
+	
 	
 	/********************************************************** 转换处理方法 **********************************************/
 	function timestampToTime(timestamp){

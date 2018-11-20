@@ -25,7 +25,9 @@ import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.py.entity.SysPrivilege;
 import com.py.entity.SysUser;
+import com.py.special.Constants;
 
 
 /**
@@ -70,7 +72,7 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		//60分钟过期
 		session.setTimeout(3600000);
 		//将当前用户的菜单，放入shiro框架session中
-		//session.setAttribute(Constants.MENU, godService.getMenuByUserId(god.getLoginName(),god.getId()));
+		session.setAttribute(Constants.MENU, sysUserService.getMenuByUserId(sysUser.getLoginName(),sysUser.getId()));
 		ShiroUser shiroUser = new ShiroUser(sysUser.getLoginName(), sysUser.getName());
 		return new SimpleAuthenticationInfo(shiroUser, sysUser.getPassword(),ByteSource.Util.bytes(sysUser.getSalt()), getName());
 	}
@@ -81,14 +83,19 @@ public class ShiroDbRealm extends AuthorizingRealm {
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		ShiroUser shiroUser = (ShiroUser) principals.getPrimaryPrincipal();
-		//List<Role> roles = godService.selectRoleListByLoginName(shiroUser.loginName);
+		SysUser sysUser = sysUserService.selectByLoginName(shiroUser.getLoginName());
+		List<SysPrivilege> list = null;
+		if("admin".equals(shiroUser.getLoginName())) {
+			list=sysUserService.selectPrivilegeAll();
+		}else {
+			list = sysUserService.selectPrivilegeByUserId(sysUser.getId());
+		}
+		List<String> permissionsList = new ArrayList<String>();
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-		/*for (Role role : roles) {
-			// 基于Role的权限信息
-			info.addRole(role.getName());
-			// 基于Permission的权限信息
-			info.addStringPermissions(roleService.selectPrivilegeListById(role.getId()));
-		}*/
+		for (SysPrivilege sysPrivilege : list) {
+			permissionsList.add(sysPrivilege.getPermissions());
+		}
+		info.addStringPermissions(permissionsList);
 		return info;
 	}
 	

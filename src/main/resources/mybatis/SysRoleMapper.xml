@@ -22,13 +22,13 @@
     delete from sys_role
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.py.entity.SysRole">
+  <insert id="insert" parameterType="com.py.entity.SysRole" useGeneratedKeys="true" keyProperty="id">
     insert into sys_role (id, name, permissions, 
       sort, p_id, path)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{permissions,jdbcType=VARCHAR}, 
       #{sort,jdbcType=INTEGER}, #{pId,jdbcType=INTEGER}, #{path,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.py.entity.SysRole">
+  <insert id="insertSelective" parameterType="com.py.entity.SysRole" useGeneratedKeys="true" keyProperty="id">
     insert into sys_role
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

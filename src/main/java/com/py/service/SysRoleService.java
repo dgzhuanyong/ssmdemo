@@ -6,7 +6,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.py.dao.SysPrivilegeMapper;
 import com.py.dao.SysRoleMapper;
+import com.py.entity.SysPrivilege;
 import com.py.entity.SysRole;
 
 @Service
@@ -14,6 +16,8 @@ public class SysRoleService {
 	
 	@Autowired
 	private SysRoleMapper sysRoleMapper;
+	@Autowired
+	private SysPrivilegeMapper sysPrivilegeMapper;
 	
 	
 	public int insert(SysRole record) {
@@ -22,6 +26,10 @@ public class SysRoleService {
 	
 	public int update(SysRole record) {
 		return sysRoleMapper.updateByPrimaryKeySelective(record);
+	}
+	
+	public SysRole selectByPrimaryKey(Integer id) {
+		return sysRoleMapper.selectByPrimaryKey(id);
 	}
 	
 	public int delelte(Integer id){
@@ -45,6 +53,14 @@ public class SysRoleService {
      */
 	public long checkRepeat(Map<String, Object> searchMap) {
 		return sysRoleMapper.checkRepeat(searchMap);
+	}
+	
+	/**
+	 * 查询全部权限
+	 * @return
+	 */
+	public List<SysPrivilege> selectPrivilegeAll(){
+		return sysPrivilegeMapper.selectPrivilegeAll();
 	}
 	
 	

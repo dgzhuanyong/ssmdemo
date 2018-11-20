@@ -27,12 +27,12 @@
     <javaClientGenerator targetPackage="com.py.dao" targetProject="ssmdemo/src/main/java" type="XMLMAPPER" />
     
     
-    <table domainObjectName="SysRole" tableName="sys_role" enableCountByExample="false" enableUpdateByExample="false"  
+    <table domainObjectName="SysPrivilege" tableName="sys_privilege" enableCountByExample="false" enableUpdateByExample="false"  
             enableDeleteByExample="false" enableSelectByExample="false"  
             selectByExampleQueryId="false">
     </table>
     
-    <table domainObjectName="SysUserRole" tableName="sys_user_role" enableCountByExample="false" enableUpdateByExample="false"  
+    <table domainObjectName="SysRolePrivilege" tableName="sys_role_privilege" enableCountByExample="false" enableUpdateByExample="false"  
             enableDeleteByExample="false" enableSelectByExample="false"  
             selectByExampleQueryId="false">
     </table>

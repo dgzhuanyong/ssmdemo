@@ -26,44 +26,44 @@
 	              </a>
 	              <dl class="layui-nav-child">
 	              	<c:forEach var="item2" items="${menu.menu2}">
-	              	<c:if test="${item1.id eq item2.parentId && item2.url ne '#'}">
+	              	<c:if test="${item1.id eq item2.pId && item2.url ne '#'}">
 	                <dd data-name="">
 	                  <a lay-href="${ctx}${item2.url}">${item2.name}</a>
 	                </dd>
 	                </c:if>
-	                <c:if test="${item1.id eq item2.parentId && item2.url eq '#'}">
+	                <c:if test="${item1.id eq item2.pId && item2.url eq '#'}">
 	                  <dd data-name="">
 	                  	<a href="javascript:;">${item2.name}</a>
 	                  	<dl class="layui-nav-child">
 	                  		<c:forEach var="item3" items="${menu.menu3}">
-	                  		<c:if test="${item2.id eq item3.parentId && item3.url ne '#'}">
+	                  		<c:if test="${item2.id eq item3.pId && item3.url ne '#'}">
 	                  			<dd data-name=""><a lay-href="${ctx}${item3.url}">${item3.name}</a></dd>
 	                  		</c:if>
-	                  		<c:if test="${item2.id eq item3.parentId && item3.url eq '#'}">
+	                  		<c:if test="${item2.id eq item3.pId && item3.url eq '#'}">
 	                  			<dd data-name="">
 				                  	<a href="javascript:;">${item3.name}</a>
 				                  	<dl class="layui-nav-child">
 				                  		<c:forEach var="item4" items="${menu.menu4}">
-				                  		<c:if test="${item3.id eq item4.parentId && item4.url ne '#'}">
+				                  		<c:if test="${item3.id eq item4.pId && item4.url ne '#'}">
 				                  			<dd data-name=""><a lay-href="${ctx}${item4.url}">${item4.name}</a></dd>
 				                  		</c:if>
-				                  		<c:if test="${item3.id eq item4.parentId && item4.url eq '#'}">
+				                  		<c:if test="${item3.id eq item4.pId && item4.url eq '#'}">
 				                  			<%-- <dd data-name="">
 							                  	<a href="javascript:;">${item4.name}</a>
 							                  	<dl class="layui-nav-child">
 							                  		<c:forEach var="item5" items="${menu.menu5}">
-							                  		<c:if test="${item4.id eq item5.parentId && item5.url ne '#'}">
+							                  		<c:if test="${item4.id eq item5.pId && item5.url ne '#'}">
 							                  			<dd data-name=""><a lay-href="${ctx}${item5.url}">${item5.name}</a></dd>
 							                  		</c:if>
-							                  		<c:if test="${item4.id eq item5.parentId && item5.url eq '#'}">
+							                  		<c:if test="${item4.id eq item5.pId && item5.url eq '#'}">
 							                  			<dd data-name="">
 										                  	<a href="javascript:;">${item5.name}</a>
 										                  	<dl class="layui-nav-child">
 										                  		<c:forEach var="item6" items="${menu.menu6}">
-										                  		<c:if test="${item5.id eq item6.parentId && item6.url ne '#'}">
+										                  		<c:if test="${item5.id eq item6.pId && item6.url ne '#'}">
 										                  			<dd data-name=""><a lay-href="${ctx}${item6.url}">${item6.name}</a></dd>
 										                  		</c:if>
-										                  		<c:if test="${item5.id eq item6.parentId && item6.url eq '#'}">
+										                  		<c:if test="${item5.id eq item6.pId && item6.url eq '#'}">
 										                  			
 										                  		</c:if>
 										                  		</c:forEach>

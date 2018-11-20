@@ -91,48 +91,40 @@
 			  $("#form").ajaxSubmit({
 		    		url: "${url}",
 		    		type: "post",
+		    		dataType:"json",
 		    		success: function(result) {
+		    			console.log(result)
 		    			var code = result.code;
 		    			var type = result.type;
 		    			if(code == 'parameter'){
-		    				if(type == 'password'){
-		    					layer.msg('参数不正确', {
-		    		    			  icon: 5
-		    		    			  ,time: 1500
-		    		    		});
-		    				}
+		    				layer.msg('参数不正确', {
+	    		    			  icon: 5
+	    		    			  ,time: 1500
+	    		    		});
 		    			}
 		    			if(code == 'incorrect'){
-		    				if(type == 'password'){
-		    					layer.msg('旧密码不正确', {
-		    		    			  icon: 5
-		    		    			  ,time: 1500
-		    		    		});
-		    				}
+		    				layer.msg('旧密码不正确', {
+	    		    			  icon: 5
+	    		    			  ,time: 1500
+	    		    		});
 		    			}
 		    			if(code == 'atypism'){
-		    				if(type == 'password'){
-		    					layer.msg('两次输入的密码不一致', {
-		    		    			  icon: 5
-		    		    			  ,time: 1500
-		    		    		});
-		    				}
+		    				layer.msg('两次输入的密码不一致', {
+	    		    			  icon: 5
+	    		    			  ,time: 1500
+	    		    		});
 		    			}
 		    			if(code == 'agreement'){
-		    				if(type == 'password'){
-		    					layer.msg('新密码与旧密码不能相同', {
-		    		    			  icon: 5
-		    		    			  ,time: 1500
-		    		    		});
-		    				}
+		    				layer.msg('新密码与旧密码不能相同', {
+	    		    			  icon: 5
+	    		    			  ,time: 1500
+	    		    		});
 		    			}
 		    			if(code == 'success'){
-		    				if(type == 'password'){
-		    					layer.msg('修改成功', {
-		    		    			  icon: 6
-		    		    			  ,time: 1500
-		    		    		});
-		    				}
+		    				layer.msg('修改成功', {
+	    		    			  icon: 6
+	    		    			  ,time: 1500
+	    		    		});
 		    				setTimeout(function(){
 		    					window.location.href='${ctx}/logout'
 		    				}, 1500);
