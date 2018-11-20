@@ -18,7 +18,11 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Maps;
 import com.py.controller.base.BaseController;
+import com.py.entity.SysRole;
 import com.py.entity.SysUser;
+import com.py.entity.SysUserRole;
+import com.py.service.SysRoleService;
+import com.py.service.SysUserRoleService;
 import com.py.service.SysUserService;
 import com.py.special.ShiroUtils;
 import com.py.utils.Utils;
@@ -29,6 +33,10 @@ public class SysUserController extends BaseController {
 	
 	@Autowired
 	private SysUserService sysUserService;
+	@Autowired
+	private SysRoleService sysRoleService;
+	@Autowired
+	private SysUserRoleService sysUserRoleService;
 	
 	
 	/***************************************************list*********************************************************/
@@ -96,6 +104,11 @@ public class SysUserController extends BaseController {
 		//查询对象
 		SysUser sysUser = sysUserService.selectByPrimaryKey(id);
 		model.addAttribute("obj", sysUser);
+		//查询所有角色
+		List<SysRole> list = sysRoleService.selectConditionList(null);
+		model.addAttribute("roleList", list);
+		SysUserRole sysUserRole = sysUserRoleService.selectByUserId(id);
+		model.addAttribute("sysUserRole", sysUserRole);
 		return "jsp/sysuser/userForm";
 	}
 	
@@ -119,6 +132,17 @@ public class SysUserController extends BaseController {
 		sysUser.setSalt(salt);
 		sysUser.setPassword(password);
 		sysUserService.insert(sysUser);
+		//添加中间表
+		int roleId = 0;
+		try {
+			roleId = Integer.parseInt(request.getParameter("roleId"));
+		} catch (Exception e) {
+			roleId = 0;
+		}
+		SysUserRole sysUserRole = new SysUserRole();
+		sysUserRole.setUserId(sysUser.getId());
+		sysUserRole.setRoleId(roleId);
+		sysUserRoleService.insert(sysUserRole);
 		resultMap.put("result", "success");
 		return resultMap;
 	}
@@ -136,6 +160,19 @@ public class SysUserController extends BaseController {
 		//返回map
 		Map<String, Object> resultMap = Maps.newHashMap();
 		sysUserService.update(sysUser);
+		//删除中间表
+		sysUserRoleService.deleteByUserId(sysUser.getId());
+		//添加中间表
+		int roleId = 0;
+		try {
+			roleId = Integer.parseInt(request.getParameter("roleId"));
+		} catch (Exception e) {
+			roleId = 0;
+		}
+		SysUserRole sysUserRole = new SysUserRole();
+		sysUserRole.setUserId(sysUser.getId());
+		sysUserRole.setRoleId(roleId);
+		sysUserRoleService.insert(sysUserRole);
 		resultMap.put("result", "success");
 		return resultMap;
 	}
@@ -162,6 +199,8 @@ public class SysUserController extends BaseController {
 			id = 0;
 		}
 		sysUserService.delete(id);
+		//删除中间表
+		sysUserRoleService.deleteByUserId(id);
 		resultMap.put("result", "success");
 		return resultMap;
 	}
@@ -180,6 +219,8 @@ public class SysUserController extends BaseController {
 		Map<String, Object> resultMap = Maps.newHashMap();
 		for (int id : ids) {
 			sysUserService.delete(id);
+			//删除中间表
+			sysUserRoleService.deleteByUserId(id);
 		}
 		resultMap.put("result", "success");
 		return resultMap;

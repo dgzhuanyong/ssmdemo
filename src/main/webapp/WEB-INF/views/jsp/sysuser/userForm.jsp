@@ -58,10 +58,10 @@
 	  <div class="layui-form-item">
 	    <label class="layui-form-label"><span style="color:red;">*</span>角色</label>
 	    <div class="layui-input-block">
-	      <select name="role" lay-verify="role">
+	      <select name="roleId" lay-verify="role">
 	      	<option value="">请选择角色</option>
-	      	<c:forEach items="${list }" var="obj">
-	      		<option value="${obj.id}" <c:if test="${obj.id == sys_userRole.roleId }">selected="selected"</c:if>>${obj.name }</option>
+	      	<c:forEach items="${roleList }" var="obj">
+	      		<option value="${obj.id}" <c:if test="${obj.id == sysUserRole.roleId }">selected="selected"</c:if>>${obj.name }</option>
 	      	</c:forEach>
 	      </select>
 	    </div>
