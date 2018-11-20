@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration >
+  
+  <!-- <classPathEntry location="E:\Access_JDBC30.jar" /> -->	
+  <!-- <classPathEntry location="E:\sqljdbc4.jar" /> -->
+  <!-- <classPathEntry location="E:\ojdbc11.jar" /> -->	
+  <classPathEntry location="F:\mysql-connector-java-5.1.6.jar" />
+  <!-- defaultModelType="flat" 简单模式 只生成一个entity和dao   --> 
+  <context id="contextId" defaultModelType="flat"> 
+  		<commentGenerator>
+  			<!-- 是否取消注释 -->  
+            <property name="suppressAllComments" value="true" /> 
+            <!-- 是否生成注释代时间戳 -->   
+            <property name="suppressDate" value="false" /> 
+        </commentGenerator>
+    
+    <!-- <jdbcConnection driverClass="com.hxtt.sql.access.AccessDriver" connectionURL="jdbc:access:///E:/comp_data.mdb" /> --> 
+    <!-- <jdbcConnection driverClass="com.microsoft.sqlserver.jdbc.SQLServerDriver" connectionURL="jdbc:sqlserver://192.168.2.9:1433;DatabaseName=Haust_LYJCY_Web" userId="sa" password="sql123" />     -->
+    <!-- <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver" connectionURL="jdbc:oracle:thin:@192.168.2.9:1521:orcl" userId="orcl" password="123456" /> -->
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://127.0.0.1:3306/ssmdemo" userId="root" password="root" />
+    
+    <javaModelGenerator targetPackage="com.py.entity" targetProject="ssmdemo/src/main/java" />
+    
+    <sqlMapGenerator targetPackage="mybatis" targetProject="ssmdemo/src/main/resources" />
+    
+    <javaClientGenerator targetPackage="com.py.dao" targetProject="ssmdemo/src/main/java" type="XMLMAPPER" />
+    
+    
+    <table domainObjectName="SysUser" tableName="sys_user" enableCountByExample="false" enableUpdateByExample="false"  
+            enableDeleteByExample="false" enableSelectByExample="false"  
+            selectByExampleQueryId="false">
+    </table>
+   	
+    
+  </context>
+</generatorConfiguration>

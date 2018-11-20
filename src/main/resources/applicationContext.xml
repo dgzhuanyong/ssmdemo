@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+        
+    <description>Spring公共配置</description>
+    
+    <context:annotation-config />
+    
+    <!-- spring的属性加载器，加载properties文件中的属性 -->
+    <context:property-placeholder location="classpath*:/application.properties"/>    
+
+    <!-- 使用annotation 自动注册bean,并检查@Required,@Autowired的属性已被注入 -->
+	<context:component-scan base-package="com.py">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+	</context:component-scan>
+
+    <!-- 配置 druid 数据源 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="username" value="${druid.username}" />
+        <property name="password" value="${druid.password}" />
+        <property name="driverClassName" value="${druid.driver}" />
+        <property name="url" value="${druid.url}" />
+        
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${druid.initialSize}" />
+        <property name="minIdle" value="${druid.minIdle}" />
+        <property name="maxActive" value="${druid.maxActive}" />
+ 
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="${druid.maxWait}" />
+ 
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${druid.timeBetweenEvictionRunsMillis}" />
+ 
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${druid.minEvictableIdleTimeMillis}" />
+ 
+        <property name="validationQuery" value="${druid.validationQuery}" />
+        <property name="testWhileIdle" value="${druid.testWhileIdle}" />
+        <property name="testOnBorrow" value="${druid.testOnBorrow}" />
+        <property name="testOnReturn" value="${druid.testOnReturn}" />
+ 
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="${druid.poolPreparedStatements}" />
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="${druid.maxPoolPreparedStatementPerConnectionSize}" />
+        
+    </bean>
+    
+    <!-- MyBatis配置 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="mapperLocations" value="classpath:mybatis/*Mapper.xml" />
+		
+		<!-- 加载mybatis的全局配置文件 -->
+        <property name="configLocation" value="classpath:sqlMapConfig.xml" />
+		
+		<!-- Mybatis分页插件-pagehelper -->
+		<property name="plugins">
+			<array>
+				<bean class="com.github.pagehelper.PageInterceptor">
+					<property name="properties">
+						<value>
+							helperDialect=mysql
+	                        reasonable=true
+	                        supportMethodsArguments=true
+	                        params=count=countSql
+	                        autoRuntimeDialect=true
+						</value>
+					</property>
+				</bean>
+			</array>
+		</property> 
+    </bean>
+    
+    <!-- DAO接口所在包名，Spring会自动查找其下的类-->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.py.dao"/>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+	</bean>
+
+    <!--定义事务 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- 配置事物传播行为 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <!-- 对insert,update,delete 开头的方法进行事务管理,只要有异常就回滚 -->  
+            <tx:method name="insert*" propagation="REQUIRED" rollback-for="java.lang.Throwable"/>  
+            <tx:method name="save*" propagation="REQUIRED" rollback-for="java.lang.Throwable"/>  
+            <tx:method name="update*" propagation="REQUIRED" rollback-for="java.lang.Throwable"/>  
+            <tx:method name="modify*" propagation="REQUIRED" rollback-for="java.lang.Throwable"/>  
+            <tx:method name="delete*" propagation="REQUIRED" rollback-for="java.lang.Throwable"/>  
+            <tx:method name="remove*" propagation="REQUIRED" rollback-for="java.lang.Throwable"/>  
+            <!-- select,count开头的方法,开启只读,提高数据库访问性能 -->  
+            <tx:method name="select*" read-only="true"/>  
+            <tx:method name="get*" read-only="true"/>  
+            <tx:method name="find*" read-only="true"/>  
+            <tx:method name="search*" read-only="true"/>  
+            <tx:method name="count*" read-only="true"/>  
+            <tx:method name="datagrid*" read-only="true"/>  
+            <!-- 对其他方法 使用默认的事务管理 -->  
+            <tx:method name="*"/>  
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 事务 aop 配置 -->  
+    <aop:config>  
+        <aop:pointcut id="serviceMethods" expression="execution(* com.py.service..*(..)) and !execution(* com.py.service..*ShiroDbRealm.*(..))"/>  
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethods"/>  
+    </aop:config>
+    
+    <!-- cacheManager, 指定ehcache.xml的位置 --> 
+    <bean id="ehcacheManagerFactory" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" scope="singleton">
+        <property name="configLocation" value="classpath:ehcache.xml"/>
+        <property name="shared" value="true"/><!-- 开启缓存共享，与shiro公用ehcache缓存 -->
+    </bean>
+    
+   
+   	<!-- 默认是cacheManager -->  
+    <bean id="ehcacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">    
+        <property name="cacheManager" ref="ehcacheManagerFactory"/>
+    </bean>
+
+    <!-- 注解方式的事务拦截器 开启 -->
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+	
+	<!-- 定义aspectj,使Spring采用CGLIB代理 -->
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+    
+</beans>

@@ -1,0 +1,15 @@
+.contPadding{
+	padding:20px 30px;
+}
+.layui-btn-container{
+	margin-top:20px;
+}
+.layui-input-block{
+	line-height:38px;
+}
+.layui-btn-danger{
+	background-color: #de6d57;
+}
+.layui-btn-primary{
+	background-color: #fff;
+}
