@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.py.service.ShiroDbRealm.ShiroUser;
 import com.py.entity.SysUser;
 import com.py.service.SysUserService;
+import com.py.utils.Utils;
 
 
 /**
@@ -32,11 +33,13 @@ public class LoginSuccessController {
 	private SysUserService sysUserService;
 	
 	@RequestMapping(value = "")
-	public String loginSuccess(HttpServletRequest request) {
+	public String loginSuccess(HttpServletRequest request) throws Exception {
 		ShiroUser shiroUser = (ShiroUser)SecurityUtils.getSubject().getPrincipal();
 		if(StringUtils.isNotBlank(shiroUser.getLoginName())){
 			SysUser sysUser = sysUserService.selectByLoginName(shiroUser.getLoginName());
 			sysUser.setLastLoginTime(new Date());
+			sysUser.setLastLoginIp(Utils.getIpAddress(request));
+			sysUserService.update(sysUser);
 			return "redirect:/index";
 		}
 		return "login";
