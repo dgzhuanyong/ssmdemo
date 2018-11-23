@@ -1,4 +1,4 @@
-package com.py.utils;
+package com.py.utils.jpush;
 
 import java.util.Map;
 

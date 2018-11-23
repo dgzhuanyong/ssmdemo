@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class OfTime {
+	
 	/**
 	 * 获取当前系统时间（yyyy-MM-dd HH:mm:ss）格式
 	 * @return
@@ -21,6 +22,7 @@ public class OfTime {
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//设置日期格式
 		return df.format(new Date());
 	}
+	
 	/**
 	 * 获取当前系统时间（yyyy-MM-dd ）格式
 	 */
@@ -37,12 +39,10 @@ public class OfTime {
 		return df.format(new Date());
 	}
 	
-	
 	/** 
      * 获取当月的 天数 
      */  
     public static int getCurrentMonthDay() {  
-
         Calendar a = Calendar.getInstance();  
         a.set(Calendar.DATE, 1);  
         a.roll(Calendar.DATE, -1);  
@@ -54,7 +54,6 @@ public class OfTime {
      * 根据年 月 获取对应的月份 天数 
      */  
     public static int getDaysByYearMonth(int year, int month) {  
-
         Calendar a = Calendar.getInstance();  
         a.set(Calendar.YEAR, year);  
         a.set(Calendar.MONTH, month - 1);  
@@ -88,8 +87,7 @@ public class OfTime {
      * 返回当前年月日  
      * @return
      */
-    public static String getNowDate()  
-    {  
+    public static String getNowDate(){  
         Date date = new Date();  
         String nowDate = new SimpleDateFormat("yyyy年MM月dd日").format(date);  
         return nowDate;  
@@ -99,8 +97,7 @@ public class OfTime {
      * 返回当前年份  
      * @return
      */
-    public static int getYear()  
-    {  
+    public static int getYear(){  
         Date date = new Date();  
         String year = new SimpleDateFormat("yyyy").format(date);  
         return Integer.parseInt(year);  
@@ -110,8 +107,7 @@ public class OfTime {
      * 返回当前月份  
      * @return
      */
-    public static int getMonth()  
-    {  
+    public static int getMonth(){  
         Date date = new Date();  
         String month = new SimpleDateFormat("MM").format(date);  
         return Integer.parseInt(month);  
@@ -122,8 +118,7 @@ public class OfTime {
      * @param year
      * @return
      */
-    public static boolean isLeap(int year)  
-    {  
+    public static boolean isLeap(int year){  
         if (((year % 100 == 0) && year % 400 == 0) || ((year % 100 != 0) && year % 4 == 0))  
             return true;  
         else  
@@ -136,14 +131,12 @@ public class OfTime {
      * @param month
      * @return
      */
-    public static int getDays(int year, int month)  
-    {  
+    public static int getDays(int year, int month){  
         int days;  
         int FebDay = 28;  
         if (isLeap(year))  
             FebDay = 29;  
-        switch (month)  
-        {  
+        switch (month){  
             case 1:  
             case 3:  
             case 5:  

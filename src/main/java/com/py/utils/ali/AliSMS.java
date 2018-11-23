@@ -1,4 +1,4 @@
-package com.py.utils;
+package com.py.utils.ali;
 
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
@@ -12,8 +12,6 @@ public class AliSMS {
 	
 	  /*****************短信模板*******************/
 	  public static final String ZC_TEMPLATE = "SMS_147170212";
-	  
-	  
 	  
 	  
 	  //产品名称:云通信短信API产品,开发者无需替换
