@@ -12,11 +12,11 @@ import com.py.service.SysUserService;
 
 /**
  * 
- * Description: base
- *		
- * @author changlu
+ * @content base
  *
- * 2018年5月22日
+ * @author cl
+ *
+ * 2018年11月20日
  */
 public class BaseController {
 	
