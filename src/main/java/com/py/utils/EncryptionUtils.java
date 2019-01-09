@@ -1,9 +1,17 @@
 package com.py.utils;
 
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 
+
+/**
+ * 
+ * @content 编码方法的工具类
+ *
+ * @author cl
+ *
+ * 2019年1月9日
+ */
 public class EncryptionUtils {
 		
 		//base64
