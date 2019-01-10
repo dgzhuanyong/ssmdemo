@@ -9,8 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.py.utils.HttpClientUtil;
 import com.py.utils.OrderUtil;
@@ -28,7 +29,8 @@ public class MWXPayController {
 	 * @return
 	 * @throws Exception 
 	 */
-	@SuppressWarnings("unchecked")
+	@RequestMapping(value="createOrder",method=RequestMethod.POST)
+	@ResponseBody
 	public Map<String, Object> createOrder(HttpServletRequest request) throws Exception {
 		Map<String, Object> resultMap = Maps.newHashMap();
 		
@@ -73,11 +75,11 @@ public class MWXPayController {
         
         /****************调用统一下单接口*****************/
         String strxml = HttpClientUtil.doPostXml(WxPayConfig.UNIFIED_ORDER_URL, requestXML);
-        System.out.println("微信服务器返回的XML数据");
         System.out.println(strxml);
         
         /****************解析微信返回的XML*****************/
-        Map<String, String> map = WxPayUtil.doXMLParse(strxml);
+        @SuppressWarnings("unchecked")
+		Map<String, String> map = WxPayUtil.doXMLParse(strxml);
         //返回异常信息
         if(map.get("return_code").equals("FAIL")) {
        	   resultMap.put("code", 3);
@@ -89,8 +91,6 @@ public class MWXPayController {
  	   	   resultMap.put("msg", map.get("err_code_des"));
  	       return resultMap;
         }
-        System.out.println("解析的JSON数据");
-        System.out.println(JSON.toJSONString(map));
         
         /****************已经拿到prepay_id，组装APP端调起支付的参数*****************/
         SortedMap<Object, Object> parameters_app = new TreeMap<Object, Object>();
