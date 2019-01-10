@@ -164,6 +164,12 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.7</version>
         </dependency>
+        
+		<dependency>
+		    <groupId>commons-logging</groupId>
+		    <artifactId>commons-logging</artifactId>
+		    <version>1.1.1</version>
+		</dependency>       
 		
 		<!-- httpcore -->
 		<dependency>
@@ -262,6 +268,15 @@
 			<artifactId>aliyun-java-sdk-dysmsapi</artifactId>
 			<version>1.1.0</version>
 		</dependency>
+		
+		<!-- 支付宝支付 -->
+		<dependency>
+		    <groupId>com.alipay.sdk</groupId>
+		    <artifactId>alipay-sdk-java</artifactId>
+		    <version>3.4.27.ALL</version>
+		</dependency>
+
+		
 		
 		
 		
