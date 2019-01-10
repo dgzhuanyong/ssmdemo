@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.py.utils.HttpClientUtil;
 import com.py.utils.OrderUtil;
@@ -27,55 +28,108 @@ public class MWXPayController {
 	 * @return
 	 * @throws Exception 
 	 */
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> createOrder(HttpServletRequest request) throws Exception {
 		Map<String, Object> resultMap = Maps.newHashMap();
 		
-		/***************************请求参数******************************/
-		SortedMap<Object,Object> parameters = new TreeMap<Object,Object>();
+		/****************组装请求参数，请求微信支付统一下单接口*****************/
+		SortedMap<Object,Object> parameters_server = new TreeMap<Object,Object>();
 		
 		//应用ID
-        parameters.put("appid", WxPayConfig.APP_ID);
+		parameters_server.put("appid", WxPayConfig.APP_ID);
         
         //商户号
-        parameters.put("mch_id", WxPayConfig.MCH_ID);
+		parameters_server.put("mch_id", WxPayConfig.MCH_ID);
         
         //随机字符串，不长于32位 
-        parameters.put("nonce_str", WxPayUtil.CreateRandomStr(32));
+		parameters_server.put("nonce_str", WxPayUtil.CreateRandomStr(32));
         
         //商品描述  需传入应用市场上的APP名字-实际商品名称
-        parameters.put("body", "腾讯充值中心-QQ会员充值");
+		parameters_server.put("body", "腾讯充值中心-QQ会员充值");
         
-        //订单号
-        parameters.put("out_trade_no", OrderUtil.createOrder());
+        //订单号 商户系统内部订单号，要求32个字符内，只能是数字、大小写字母_-|*且在同一个商户号下唯一
+		parameters_server.put("out_trade_no", OrderUtil.createOrder());
         
-        //总金额 分
+        //订单总金额，单位为分
 		BigDecimal bd= new BigDecimal(String.valueOf(0.01));
 		int val = bd.movePointRight(2).intValue();
-        parameters.put("total_fee", val+"");
+		parameters_server.put("total_fee", val+"");
         
-        //用户端实际ip
-        parameters.put("spbill_create_ip",Utils.getIpAddress(request));
+        //终端IP 支持IPV4和IPV6两种格式的IP地址
+		parameters_server.put("spbill_create_ip",Utils.getIpAddress(request));
         
         //异步通知回调地址
-        parameters.put("notify_url", WxPayConfig.NOTIFY_URL);
+		parameters_server.put("notify_url", WxPayConfig.NOTIFY_URL);
         
         //交易类型
-        parameters.put("trade_type", "APP");
+		parameters_server.put("trade_type", "APP");
         
         //设置签名
-        String sign = WxPayUtil.createSign(parameters);
-        parameters.put("sign", sign);
+        String sign_server = WxPayUtil.createSign(parameters_server);
+        parameters_server.put("sign", sign_server);
         
         //封装请求参数
-        String requestXML = WxPayUtil.getRequestXml(parameters);
+        String requestXML = WxPayUtil.getRequestXml(parameters_server);
         
-        //调用统一下单接口
-        String result = HttpClientUtil.doPostXml(WxPayConfig.UNIFIED_ORDER_URL, requestXML);
+        /****************调用统一下单接口*****************/
+        String strxml = HttpClientUtil.doPostXml(WxPayConfig.UNIFIED_ORDER_URL, requestXML);
         System.out.println("微信服务器返回的XML数据");
-        System.out.println(result);
-
+        System.out.println(strxml);
+        
+        /****************解析微信返回的XML*****************/
+        Map<String, String> map = WxPayUtil.doXMLParse(strxml);
+        //返回异常信息
+        if(map.get("return_code").equals("FAIL")) {
+       	   resultMap.put("code", 3);
+  	   	   resultMap.put("msg", map.get("return_msg"));
+  	       return resultMap;
+        }
+        if(map.get("result_code").equals("FAIL")) {
+      	   resultMap.put("code", 3);
+ 	   	   resultMap.put("msg", map.get("err_code_des"));
+ 	       return resultMap;
+        }
+        System.out.println("解析的JSON数据");
+        System.out.println(JSON.toJSONString(map));
+        
+        /****************已经拿到prepay_id，组装APP端调起支付的参数*****************/
+        SortedMap<Object, Object> parameters_app = new TreeMap<Object, Object>();
+        
+        //应用ID
+        parameters_app.put("appid", WxPayConfig.APP_ID);
+        
+        //商户号
+        parameters_app.put("partnerid", WxPayConfig.MCH_ID);
+        
+        //预支付交易会话ID
+        parameters_app.put("prepayid", map.get("prepay_id"));
+        
+        //扩展字段 暂填写固定值Sign=WXPay
+        parameters_app.put("package", "Sign=WXPay");
+        
+        //随机字符串，不长于32位 
+        parameters_app.put("noncestr", WxPayUtil.CreateRandomStr(32));
+        
+        //时间戳  注意：部分系统取到的值为毫秒级，需要转换成秒(10位数字)
+        long second = System.currentTimeMillis()/1000;
+        String timeStamp = String.format("%010d", second);
+        parameters_app.put("timestamp", timeStamp);
+        
+        //设置签名
+        String sign_app = WxPayUtil.createSign(parameters_app);
+        parameters_app.put("sign", sign_app);
+        
+        resultMap.put("map",parameters_app);
 		resultMap.put("code","1");
         resultMap.put("msg","统一下单成功");
 	    return resultMap;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 }
