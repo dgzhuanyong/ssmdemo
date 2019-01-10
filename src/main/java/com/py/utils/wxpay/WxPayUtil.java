@@ -1,5 +1,6 @@
 package com.py.utils.wxpay;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +12,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.SortedMap;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.jdom.Document;
 import org.jdom.Element;
@@ -38,27 +41,52 @@ public class WxPayUtil {
     }
 	
 	
-	 /**
-     * @Description：sign签名
-     * @param characterEncoding 编码格式
-     * @param parameters 请求参数
-     * @return
-     */
+	/**
+	 * 拼接签名
+	 * @param parameters
+	 * @return
+	 */
 	@SuppressWarnings("rawtypes")
-	public static String createSign(SortedMap<Object,Object> parameters){
-        StringBuffer sb = new StringBuffer();
+	public static String SplicingSign(SortedMap<Object,Object> parameters) {
+		StringBuffer sb = new StringBuffer();
         Set es = parameters.entrySet();
         Iterator it = es.iterator();
         while(it.hasNext()) {
             Map.Entry entry = (Map.Entry)it.next();
             String k = (String)entry.getKey();
             Object v = entry.getValue();
-            if(null != v && !"".equals(v) && !"sign".equals(k) && !"key".equals(k)) {
+            if(null != v && !"".equals(v) && !"sign".equals(k)) {
                 sb.append(k + "=" + v + "&");
             }
         }
         sb.append("key="+WxPayConfig.API_KEY);
-        return EncryptionUtils.md5(sb.toString()).toUpperCase();
+        return sb.toString();
+	} 
+	
+	
+	
+	/**
+	 * 创建签名
+	 * @param parameters
+	 * @return
+	 */
+	public static String createSign(SortedMap<Object,Object> parameters){
+		//拼接签名
+        String str = SplicingSign(parameters);
+        return EncryptionUtils.md5(str).toUpperCase();
+    }
+	
+	
+	/** 
+     * 效验签名 
+     * @return boolean 
+     */  
+	public static boolean ValidationSign(SortedMap<Object, Object> parameters) {  
+		//拼接签名
+        String str = SplicingSign(parameters);
+        String sign = EncryptionUtils.md5(str).toUpperCase();
+        String returnSign = ((String)parameters.get("sign")).toLowerCase();
+        return returnSign.equals(sign);  
     }
 	
 	
@@ -193,6 +221,27 @@ public class WxPayUtil {
 		return xmlStr;
 	}
     
+	
+	/**
+     * @Description：返回给微信的XML
+     * @param return_code 返回编码
+     * @param return_msg  返回信息
+     * @return
+     */
+    public static void writeBackXML(String return_code, String return_msg,HttpServletResponse response) {
+        try {
+        	String resXml = "<xml>\r\n"+ 
+            		"<return_code><![CDATA["+return_code+"]]></return_code>\r\n"+ 
+            		"<return_msg><![CDATA["+return_msg+"]]></return_msg>\r\n"+ 
+            		"</xml>";
+			BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());  
+			out.write(resXml.getBytes());  
+			out.flush();  
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
 	
 	
 	

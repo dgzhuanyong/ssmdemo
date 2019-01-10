@@ -1,12 +1,16 @@
 package com.py.controller.phone;
 
 import java.math.BigDecimal;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +26,8 @@ import com.py.utils.wxpay.WxPayUtil;
 @Controller
 @RequestMapping(value = "/api/wechatpay")
 public class MWXPayController {
+	
+	public static final Logger logger = LoggerFactory.getLogger(MWXPayController.class);
 	
 	/**
 	 * 微信APP支付  统一下单
@@ -127,6 +133,57 @@ public class MWXPayController {
 	
 	
 	
+	/**
+	 * 微信支付异步通知
+	 * @param request
+	 * @param response
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void notify(HttpServletRequest request,HttpServletResponse response){
+		logger.info("微信支付异步通知开始");
+		//获取微信服务器回调的XML数据
+		String strxml = Utils.readRequestData(request);
+		Map<String, String> map = WxPayUtil.doXMLParse(strxml);
+		//过滤空置 设置为TreeMap
+		SortedMap<Object,Object> parameters = new TreeMap<Object,Object>();        
+        Iterator it = map.keySet().iterator();  
+        while (it.hasNext()) {  
+            String parameter = (String) it.next();  
+            String parameterValue = map.get(parameter);  
+            String v = "";  
+            if(null != parameterValue) {  
+                v = parameterValue.trim();  
+            }  
+            parameters.put(parameter, v);  
+        }
+        //判断签名是否正确
+        if(WxPayUtil.ValidationSign(parameters)) {
+        	logger.info("微信支付验签成功");
+        	String return_code = (String) parameters.get("return_code");
+        	if(return_code.equals("SUCCESS")) {
+        		String result_code = (String) parameters.get("result_code");
+        		//商户订单号
+        		String out_trade_no = (String) parameters.get("out_trade_no");
+        		if(result_code.equals("SUCCESS")) {
+        			//处理业务结果
+        			logger.info("微信支付支付成功，订单号："+out_trade_no);
+        			//回写微信服务器
+        			WxPayUtil.writeBackXML("SUCCESS", "OK", response);
+        		}else {
+        			String err_code_des = (String) parameters.get("err_code_des");
+        			logger.error("微信支付支付失败，订单号："+out_trade_no+"，错误结果："+err_code_des);
+        			//回写微信服务器
+        			WxPayUtil.writeBackXML("FAIL", "支付失败", response);
+        		}
+        	}else {
+        		logger.error("微信支付通信失败");
+        		WxPayUtil.writeBackXML("FAIL", "报文为空", response);
+        	}
+        }else {
+        	logger.error("微信支付验签失败");
+        	WxPayUtil.writeBackXML("FAIL", "通知签名验证失败", response);
+        }
+	}
 	
 	
 	

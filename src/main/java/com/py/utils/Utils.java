@@ -142,6 +142,35 @@ public class Utils {
 	}
 	
 	
+	/**
+	 * 以二进制的方式从request中读取数据
+	 * @param request
+	 * @return
+	 */
+    public static String readRequestData(HttpServletRequest request){
+    	StringBuilder sb = new StringBuilder();
+        InputStream is = null;
+        try{
+            is = request.getInputStream();
+            byte[] b = new byte[4096];
+            for (int n; (n = is.read(b)) != -1;){
+                sb.append(new String(b, 0, n,"UTF-8"));
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        finally{
+            if (null != is){
+                try{
+                    is.close();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return sb.toString();
+    }
+	
 	
 	
 }
