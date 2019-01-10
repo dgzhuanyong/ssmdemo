@@ -45,7 +45,7 @@ public class MWXPayController {
 		parameters_server.put("nonce_str", WxPayUtil.CreateRandomStr(32));
         
         //商品描述  需传入应用市场上的APP名字-实际商品名称
-		parameters_server.put("body", "腾讯充值中心-QQ会员充值");
+		parameters_server.put("body", "微信充值0.01元");
         
         //订单号 商户系统内部订单号，要求32个字符内，只能是数字、大小写字母_-|*且在同一个商户号下唯一
 		parameters_server.put("out_trade_no", OrderUtil.createOrder());
