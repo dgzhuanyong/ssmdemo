@@ -23,6 +23,14 @@ import com.py.utils.Utils;
 import com.py.utils.wxpay.WxPayConfig;
 import com.py.utils.wxpay.WxPayUtil;
 
+/**
+ * 
+ * @content 微信支付
+ *
+ * @author cl
+ *
+ * 2019年1月10日
+ */
 @Controller
 @RequestMapping(value = "/api/wechatpay")
 public class MWXPayController {

@@ -8,7 +8,7 @@ import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 
-public class AliSMS {
+public class AliSms {
 	
 	  /*****************短信模板*******************/
 	  public static final String ZC_TEMPLATE = "SMS_147170212";
