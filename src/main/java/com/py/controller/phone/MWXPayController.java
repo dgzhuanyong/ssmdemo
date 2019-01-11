@@ -125,9 +125,7 @@ public class MWXPayController {
         parameters_app.put("noncestr", WxPayUtil.CreateRandomStr(32));
         
         //时间戳  注意：部分系统取到的值为毫秒级，需要转换成秒(10位数字)
-        long second = System.currentTimeMillis()/1000;
-        String timeStamp = String.format("%010d", second);
-        parameters_app.put("timestamp", timeStamp);
+        parameters_app.put("timestamp", String.format("%010d", (System.currentTimeMillis()/1000)));
         
         //设置签名
         String sign_app = WxPayUtil.createSign(parameters_app);
