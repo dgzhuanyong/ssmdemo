@@ -1,5 +1,7 @@
 package com.py.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.py.entity.Token;
 
 public interface TokenMapper {
@@ -15,8 +17,12 @@ public interface TokenMapper {
 
     int updateByPrimaryKey(Token record);
     
-    //查询token是否存在
-    Token selectByToken(String token);
+    /**
+     * 查询token是否存在
+     * @param token
+     * @return
+     */
+    Token selectByToken(@Param("token") String token);
     
     
     

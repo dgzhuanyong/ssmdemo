@@ -90,4 +90,17 @@
       is_delete = #{isDelete,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <!-- 根据手机号查询最新的一条短信记录  -->
+  <select id="selectByPhoneLast" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from app_sms_send_record
+    where is_delete = 0 and phone = #{phone}
+    order by id desc limit 0,1
+  </select>
+  
+  
+  
+  
 </mapper>

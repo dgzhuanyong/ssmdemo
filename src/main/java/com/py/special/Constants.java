@@ -24,5 +24,8 @@ public class Constants implements Serializable{
 	/**默认密码值 */
 	public static final String DEFAULT_PASSWORD = "123456";
 	
+	/**手机短信控制数量 */
+	public static final String PHONE_SMS_CONTROL_COUNT = "10";
+	
 	
 }
