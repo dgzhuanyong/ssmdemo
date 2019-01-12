@@ -5,7 +5,7 @@
   <!-- <classPathEntry location="E:\Access_JDBC30.jar" /> -->	
   <!-- <classPathEntry location="E:\sqljdbc4.jar" /> -->
   <!-- <classPathEntry location="E:\ojdbc11.jar" /> -->	
-  <classPathEntry location="F:\mysql-connector-java-5.1.6.jar" />
+  <classPathEntry location="E:\mysql-connector-java-5.1.44.jar" />
   <!-- defaultModelType="flat" 简单模式 只生成一个entity和dao   --> 
   <context id="contextId" defaultModelType="flat"> 
   		<commentGenerator>
@@ -27,12 +27,7 @@
     <javaClientGenerator targetPackage="com.py.dao" targetProject="ssmdemo/src/main/java" type="XMLMAPPER" />
     
     
-    <table domainObjectName="SysPrivilege" tableName="sys_privilege" enableCountByExample="false" enableUpdateByExample="false"  
-            enableDeleteByExample="false" enableSelectByExample="false"  
-            selectByExampleQueryId="false">
-    </table>
-    
-    <table domainObjectName="SysRolePrivilege" tableName="sys_role_privilege" enableCountByExample="false" enableUpdateByExample="false"  
+    <table domainObjectName="Token" tableName="app_token" enableCountByExample="false" enableUpdateByExample="false"  
             enableDeleteByExample="false" enableSelectByExample="false"  
             selectByExampleQueryId="false">
     </table>
