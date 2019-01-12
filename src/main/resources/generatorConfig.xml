@@ -27,7 +27,7 @@
     <javaClientGenerator targetPackage="com.py.dao" targetProject="ssmdemo/src/main/java" type="XMLMAPPER" />
     
     
-    <table domainObjectName="Token" tableName="app_token" enableCountByExample="false" enableUpdateByExample="false"  
+    <table domainObjectName="SmsSendRecord" tableName="app_sms_send_record" enableCountByExample="false" enableUpdateByExample="false"  
             enableDeleteByExample="false" enableSelectByExample="false"  
             selectByExampleQueryId="false">
     </table>

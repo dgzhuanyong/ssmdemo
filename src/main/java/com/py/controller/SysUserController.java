@@ -26,7 +26,14 @@ import com.py.service.SysUserRoleService;
 import com.py.service.SysUserService;
 import com.py.special.ShiroUtils;
 import com.py.utils.Utils;
-
+/**
+ * 
+ * @content 系统角色
+ *
+ * @author cl
+ *
+ * 2019年1月12日
+ */
 @Controller
 @RequestMapping(value = "/sys_user")
 public class SysUserController extends BaseController {

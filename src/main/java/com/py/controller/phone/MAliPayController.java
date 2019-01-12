@@ -31,7 +31,7 @@ import com.py.utils.ali.AliPayUtil;
  *
  * @author cl
  *
- * 2019年1月10日
+ * 2019年1月12日
  */
 @Controller
 @RequestMapping(value = "/api/alipay")
@@ -41,7 +41,7 @@ public class MAliPayController {
 
 	
 	/**
-	 * 支付宝统一下单接口
+	 * 支付宝APP支付 统一下单
 	 * @param request
 	 * @return
 	 */

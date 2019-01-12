@@ -26,6 +26,14 @@ import com.py.service.SysRolePrivilegeService;
 import com.py.service.SysRoleService;
 import com.py.utils.Utils;
 
+/**
+ * 
+ * @content 系统用户
+ *
+ * @author cl
+ *
+ * 2019年1月12日
+ */
 @Controller
 @RequestMapping(value = "/sys_role")
 public class SysRoleController extends BaseController {

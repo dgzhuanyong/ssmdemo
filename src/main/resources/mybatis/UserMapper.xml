@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.py.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="com.py.entity.User">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="salt" jdbcType="VARCHAR" property="salt" />
+    <result column="pass_word" jdbcType="VARCHAR" property="passWord" />
+    <result column="id_code" jdbcType="VARCHAR" property="idCode" />
+    <result column="head_url" jdbcType="VARCHAR" property="headUrl" />
+    <result column="reg_date" jdbcType="TIMESTAMP" property="regDate" />
+    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+    <result column="last_login_longitude" jdbcType="VARCHAR" property="lastLoginLongitude" />
+    <result column="last_login_latitude" jdbcType="VARCHAR" property="lastLoginLatitude" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, phone, name, salt, pass_word, id_code, head_url, reg_date, last_login_time, last_login_longitude, 
+    last_login_latitude
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from app_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from app_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.py.entity.User">
+    insert into app_user (id, phone, name, 
+      salt, pass_word, id_code, 
+      head_url, reg_date, last_login_time, 
+      last_login_longitude, last_login_latitude)
+    values (#{id,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{salt,jdbcType=VARCHAR}, #{passWord,jdbcType=VARCHAR}, #{idCode,jdbcType=VARCHAR}, 
+      #{headUrl,jdbcType=VARCHAR}, #{regDate,jdbcType=TIMESTAMP}, #{lastLoginTime,jdbcType=TIMESTAMP}, 
+      #{lastLoginLongitude,jdbcType=VARCHAR}, #{lastLoginLatitude,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.py.entity.User">
+    insert into app_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="salt != null">
+        salt,
+      </if>
+      <if test="passWord != null">
+        pass_word,
+      </if>
+      <if test="idCode != null">
+        id_code,
+      </if>
+      <if test="headUrl != null">
+        head_url,
+      </if>
+      <if test="regDate != null">
+        reg_date,
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time,
+      </if>
+      <if test="lastLoginLongitude != null">
+        last_login_longitude,
+      </if>
+      <if test="lastLoginLatitude != null">
+        last_login_latitude,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="passWord != null">
+        #{passWord,jdbcType=VARCHAR},
+      </if>
+      <if test="idCode != null">
+        #{idCode,jdbcType=VARCHAR},
+      </if>
+      <if test="headUrl != null">
+        #{headUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="regDate != null">
+        #{regDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginTime != null">
+        #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginLongitude != null">
+        #{lastLoginLongitude,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginLatitude != null">
+        #{lastLoginLatitude,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.py.entity.User">
+    update app_user
+    <set>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        salt = #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="passWord != null">
+        pass_word = #{passWord,jdbcType=VARCHAR},
+      </if>
+      <if test="idCode != null">
+        id_code = #{idCode,jdbcType=VARCHAR},
+      </if>
+      <if test="headUrl != null">
+        head_url = #{headUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="regDate != null">
+        reg_date = #{regDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginLongitude != null">
+        last_login_longitude = #{lastLoginLongitude,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginLatitude != null">
+        last_login_latitude = #{lastLoginLatitude,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.py.entity.User">
+    update app_user
+    set phone = #{phone,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      salt = #{salt,jdbcType=VARCHAR},
+      pass_word = #{passWord,jdbcType=VARCHAR},
+      id_code = #{idCode,jdbcType=VARCHAR},
+      head_url = #{headUrl,jdbcType=VARCHAR},
+      reg_date = #{regDate,jdbcType=TIMESTAMP},
+      last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      last_login_longitude = #{lastLoginLongitude,jdbcType=VARCHAR},
+      last_login_latitude = #{lastLoginLatitude,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
