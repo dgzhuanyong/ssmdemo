@@ -132,6 +132,7 @@ public class MAliPayController {
 		 	 //交易状态 
 		     String tradeStatus = request.getParameter("trade_status");   
 	    	 if(tradeStatus.equals("TRADE_SUCCESS") || tradeStatus.equals("TRADE_FINISHED")) {
+	    		 //内部系统要判断支付状态，成功的订单不要在做处理，以免受通知影响
 	    		 logger.info("支付宝支付成功，订单号："+out_trade_no);
 	    		 return "success";
 	    	 }else {

@@ -171,6 +171,7 @@ public class MWXPayController {
         		//商户订单号
         		String out_trade_no = (String) parameters.get("out_trade_no");
         		if(result_code.equals("SUCCESS")) {
+        			//内部系统要判断支付状态，成功的订单不要在做处理，以免受通知影响
         			//处理业务结果
         			logger.info("微信支付支付成功，订单号："+out_trade_no);
         			//回写微信服务器
